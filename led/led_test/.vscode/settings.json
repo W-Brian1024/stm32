@@ -1,0 +1,5 @@
+{
+    "C_Cpp.default.compilerPath": "/home/weng/code/train/stm32/led/led_test/.vscode/c_cpp_properties.json",
+    "cortex-debug.armToolchainPath": "/usr/bin",
+    "cortex-debug.openocdPath": "/usr/bin/openocd"
+}
