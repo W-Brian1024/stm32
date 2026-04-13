@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build STM32",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "-j4",
+        "all"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Clean STM32",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Download (OpenOCD)",
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-c",
+        "transport select hla_swd",
+        "-f",
+        "target/stm32f1x.cfg",
+        "-c",
+        "adapter speed 480",
+        "-c",
+        "init; reset halt; flash write_image erase build/timer.elf; verify_image build/timer.elf; reset run; shutdown"
+      ],
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "dependsOn": [
+        "Build STM32"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

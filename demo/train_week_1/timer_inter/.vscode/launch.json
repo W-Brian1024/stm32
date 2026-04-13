@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Cortex Debug",
+      "cwd": "${workspaceFolder}",
+      "executable": "./build/timer.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      "servertype": "openocd",
+      "device": "STM32F103C8",
+      "configFiles": [
+        "interface/stlink.cfg",
+        "target/stm32f1x.cfg"
+      ],
+      "runToEntryPoint": "main",
+      "showDevDebugOutput": "raw",
+      "gdbPath": "/usr/bin/gdb-multiarch",
+      "preLaunchTask": "Build STM32"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "configurations": [
+    {
+      "name": "STM32",
+      "compilerPath": "/usr/bin/arm-none-eabi-gcc",
+      "intelliSenseMode": "gcc-arm",
+      "defines": [
+        "STM32F103xB"
+      ],
+      "includePath": [
+        "${workspaceFolder}/**"
+      ],
+      "compilerArgs": [
+        "-mcpu=cortex-m3",
+        "-mthumb"
+      ]
+    }
+  ],
+  "version": 4
+}
