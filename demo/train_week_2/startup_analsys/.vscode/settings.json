@@ -1,0 +1,9 @@
+{
+    "cmake.configureOnOpen": false,
+    "cortex-debug.armToolchainPath": "/usr/bin",
+    "cortex-debug.openocdPath": "/usr/bin/openocd",
+    "files.associations": {
+        "*.s": "asm",
+        "*.ld": "linkerscript"
+    }
+}

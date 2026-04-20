@@ -1,0 +1,90 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build STM32",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "-j4",
+        "all"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$gcc"
+      ]
+    },
+    {
+      "label": "Clean STM32",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Flash (ST-Link)",
+      "type": "shell",
+      "command": "st-flash",
+      "args": [
+        "--reset",
+        "write",
+        "build/startup_analysis.bin",
+        "0x08000000"
+      ],
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "dependsOn": [
+        "Build STM32"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Flash (OpenOCD)",
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-c",
+        "transport select hla_swd",
+        "-f",
+        "target/stm32f1x.cfg",
+        "-c",
+        "adapter speed 100",
+        "-c",
+        "init; reset init; halt; program build/startup_analysis.bin 0x08000000 verify reset exit"
+      ],
+      "options": {
+        "cwd": "${workspaceRoot}"
+      },
+      "dependsOn": [
+        "Build STM32"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Analyze",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "analyze"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Debug",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "debug"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
