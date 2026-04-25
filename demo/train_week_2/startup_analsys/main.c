@@ -87,6 +87,37 @@
 #define LED_BLINK_FAIL_MS   100
 
 /* ============================================================
+ * 位操作宏定义
+ * ============================================================ */
+#define BIT_SET(reg, bit)      ((reg) |= (1UL << (bit)))
+#define BIT_CLR(reg, bit)      ((reg) &= ~(1UL << (bit)))
+#define BIT_TOGGLE(reg, bit)   ((reg) ^= (1UL << (bit)))
+#define BIT_READ(reg, bit)     (((reg) >> (bit)) & 1UL)
+
+/* ============================================================
+ * GPIO 操作宏定义
+ * ============================================================ */
+#define GPIO_WRITE_PIN(port, pin, value) \
+    do { \
+        if (value) { \
+            BIT_SET((port)->ODR, (pin)); \
+        } else { \
+            BIT_CLR((port)->ODR, (pin)); \
+        } \
+    } while(0)
+
+#define GPIO_SET_PIN(port, pin)    BIT_SET((port)->ODR, (pin))
+#define GPIO_CLR_PIN(port, pin)    BIT_CLR((port)->ODR, (pin))
+#define GPIO_TOGGLE_PIN(port, pin) BIT_TOGGLE((port)->ODR, (pin))
+
+/* ============================================================
+ * LED 控制宏定义 (低电平点亮)
+ * ============================================================ */
+#define LED_OFF()    GPIO_SET_PIN(LED_PORT, LED_PIN)   /* 高电平，LED 熄灭 */
+#define LED_ON()     GPIO_CLR_PIN(LED_PORT, LED_PIN)   /* 低电平，LED 点亮 */
+#define LED_TOGGLE() GPIO_TOGGLE_PIN(LED_PORT, LED_PIN)
+
+/* ============================================================
  * 类型定义
  * ============================================================ */
 
@@ -203,7 +234,7 @@ static void gpio_init(void)
     *cr = temp;
 
     /* 初始状态: LED 熄灭 (高电平) */
-    GPIOC->ODR |= (1UL << 13);
+    LED_OFF();
 }
 
 /* ============================================================
@@ -230,18 +261,18 @@ static void delay_ms(uint32_t ms)
  * ============================================================ */
 static void led_blink_pass(void)
 {
-    GPIOC->ODR |= (1UL << LED_PIN);      /* 高电平，LED 熄灭 */
+    LED_OFF();                           /* 高电平，LED 熄灭 */
     delay_ms(LED_BLINK_SHORT_MS);
-    GPIOC->ODR &= ~(1UL << LED_PIN);     /* 低电平，LED 点亮 */
+    LED_ON();                            /* 低电平，LED 点亮 */
     delay_ms(LED_BLINK_LONG_MS);
 }
 
 static void led_blink_fail(uint32_t code)
 {
     for (uint32_t i = 0; i < code; i++) {
-        GPIOC->ODR |= (1UL << LED_PIN);  /* 高电平，LED 熄灭 */
+        LED_OFF();                        /* 高电平，LED 熄灭 */
         delay_ms(LED_BLINK_FAIL_MS);
-        GPIOC->ODR &= ~(1UL << LED_PIN); /* 低电平，LED 点亮 */
+        LED_ON();                         /* 低电平，LED 点亮 */
         delay_ms(LED_BLINK_FAIL_MS);
     }
     delay_ms(1000);
@@ -385,9 +416,9 @@ int main(void)
 
     /* 全部测试通过, LED 慢闪 */
     while (1) {
-        GPIOC->ODR |= (1UL << LED_PIN);   /* 高电平，LED 熄灭 */
+        LED_OFF();                         /* 高电平，LED 熄灭 */
         delay_ms(500);
-        GPIOC->ODR &= ~(1UL << LED_PIN);  /* 低电平，LED 点亮 */
+        LED_ON();                          /* 低电平，LED 点亮 */
         delay_ms(500);
     }
 
